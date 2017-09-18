@@ -1,0 +1,83 @@
+const webpack = require('webpack');
+const path = require('path');
+
+const buildPath = path.join(__dirname, './build');
+const staticsPath = path.join(__dirname, './static');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+
+module.exports = {
+
+  context: path.resolve(__dirname, './src'),
+  devtool: 'source-map',
+  devServer: {
+    historyApiFallback: true,
+  },
+  entry: {
+    'app': [
+      'babel-polyfill',
+      'react-hot-loader/patch',
+      './index.js'
+    ]
+  },
+  output: {
+    filename: '[name].bundle.js',
+    path: buildPath,
+    publicPath: '/'
+  },
+  plugins:
+    [
+     new HtmlWebpackPlugin({
+        template: 'html/index.template.ejs',
+        inject: 'body',
+        alwaysWriteToDisk: true
+      }),
+      new HtmlWebpackHarddiskPlugin({
+        outputPath: buildPath
+      }),
+      new CopyWebpackPlugin([{ from: staticsPath }]),
+      new webpack.NoEmitOnErrorsPlugin(),
+      new webpack.DefinePlugin({
+        '__DEV__': true,
+        'process.env': {
+          'NODE_ENV': JSON.stringify('development')
+        }
+      })
+    ],
+  resolve: {
+    extensions: ['.jsx', '.js'],
+    alias: {
+        dappcontracts: path.resolve(__dirname, 'build/contracts'),
+        actions: path.resolve(__dirname, 'src/actions'),
+        lib: path.resolve(__dirname, 'src/lib')
+    }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js(x)?$/,
+        exclude: /(node_modules)/,
+        loader: 'babel-loader'
+      },
+      {
+        test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
+        loader: 'url-loader'
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      },
+      {
+        test: /\.(s)?css$/,
+        loader: 'style-loader!css-loader?sourceMap!sass-loader?sourceMap'
+      },
+      {
+        test: /\.(ico|gif|png|jpg|jpeg|svg|webp)$/,
+        loaders: ["file-loader?context=public&name=./public/[path][name].[ext]"],
+        exclude: /node_modules/
+      }
+    ]
+  }
+};
