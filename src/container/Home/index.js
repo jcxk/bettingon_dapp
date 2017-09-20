@@ -7,6 +7,7 @@ import * as AppActions from "actions/app";
 import ContractManager from "lib/contractManager.js";
 import PriceUpdater from "lib/PriceUpdater";
 import Directory from "lib/Directory";
+import Identicon from 'react-blockies';
 import moment from 'moment';
 require("moment-duration-format");
 import * as _ from 'lodash';
@@ -85,9 +86,13 @@ export class Home extends React.Component {
             console.warn("No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
             window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
         }
-        let bettingonUI = await ContractManager.getContractByPathAndAddr('BettingonUITestDeploy', window.web3.currentProvider);
 
+        //let containerAddress = (web3.version.network == "4") ? "0xf8680097717b7ce4469ebb2a7a011da4117df17e" : false;
+
+        let bettingonUI = await ContractManager.getContractByPathAndAddr('BettingonUITestDeploy', window.web3.currentProvider);
         await this.getContracts(window.web3,account, bettingonUI);
+
+
 
     }
 
@@ -115,10 +120,10 @@ export class Home extends React.Component {
             //let roundDuration = moment.duration(this.props.app.config.betCycleLength.toNumber(), "seconds");
             return (
             <div>
-                <table width="100%">
+               <table   style={{margin: "40px 0px 40px 0px",width:'350px'}} >
                   <tbody>
                   <tr>
-                    <td>OPEN ROUND:</td><td>#{this.props.app.rounds[0].roundId}</td>
+                    <td width={180}>OPEN ROUND:</td><td width={190}>#{this.props.app.rounds[0].roundId}</td>
                   </tr>
                   <tr>
                     <td>BETS:</td><td>{currentRound.bets.length}</td>
@@ -130,22 +135,17 @@ export class Home extends React.Component {
                     <td>AVERAGE:</td><td>{(avgBets>0) ? avgBets/1000 : 0}</td>
                   </tr>
                   <tr>
-                    <td>TIME TO CLOSE:</td><td>Bets are for price published till
-                    {moment.unix(currentRound.closeDate).local().format("YYYY-MM-DD HH:mm")}</td>
+                    <td>TIME TO CLOSE:</td><td>{moment.unix(currentRound.closeDate).local().format("YYYY-MM-DD HH:mm")}</td>
                   </tr>
                   </tbody>
-                </table>
-              <MuiThemeProvider>
+              </table>
+              <MuiThemeProvider >
                 <BetForm onSubmit={this.placeBet}/>
               </MuiThemeProvider>
-            </div>
-
-            );
+            </div>)
         } else {
           return(
-            <Dimmer active>
-             <Loader />
-          </Dimmer>
+            <Loader />
           );
         }
     }
@@ -177,6 +177,18 @@ export class Home extends React.Component {
             return moment.unix(props.value).local().format('YYYY-MM-DD HH:mm')
           }
         },
+          {
+              Header: 'Your bets',
+              accessor: 'bets',
+              Cell: props => {
+                  let r = _.find(props.value,['account', this.props.app.account]);
+                  if (r != undefined) {
+                      return (
+                          <p>{r.target/1000} ETH</p>
+                      );
+                  }
+              }
+          },
         {
           Header: 'Options',
           Cell: (props) => {
@@ -211,15 +223,15 @@ export class Home extends React.Component {
 
 
             <Grid container stretched  celled >
-              <Grid.Column  floated="left" width={5}>
+              <Grid.Column  floated="left" width={2}>
                 {this.renderBetForm()}
               </Grid.Column>
-              <Grid.Column  floated="left" width={5}>
+              <Grid.Column  floated="left" width={9}>
                   <CandlebarGraph
                       rounds={this.props.app.rounds}
-                      width={370}
+                      width={800}
                       scale={1.0}
-                      height={250}
+                      height={350}
                       config={this.props.app.config}
                   />
               </Grid.Column>

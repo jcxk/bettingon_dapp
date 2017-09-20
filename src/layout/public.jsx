@@ -90,13 +90,15 @@ class PublicLayout extends Component {
 
     const blockies = (this.props.app.name != null) ?
         <Menu.Item position="right"  >
-                <div height="32" >
-                    <Identicon
+
+                <Identicon
                     seed={this.props.app.account}
                     spotcolor="#000"
                     bgcolor="#ECF0F1"
-                    />
-                </div>
+                    height={32}
+                    width={32}
+                />
+
                 <a style={{fontSize:12}} onClick={(e,v) => {e.preventDefault();this.setUserName(prompt("name", "jcxk"))}}>[{this.props.app.name}]</a>
 
         </Menu.Item>
@@ -114,35 +116,8 @@ class PublicLayout extends Component {
         </header>
 
         <Grid container stretched  celled >
-            <Grid.Column stretched  floated="left" width={11}>
+            <Grid.Column stretched  floated="left" >
                 <Slot name="main" />
-            </Grid.Column>
-            <Grid.Column  stretched floated="right" width={5} >
-              <Grid  stretched>
-                  <Grid.Row >
-                    <Container >
-                      <h1>Ranking</h1>
-                      <Table basic='very'>
-                        <Table.Header>
-                          <Table.Row>
-                            <Table.HeaderCell>USER</Table.HeaderCell>
-                            <Table.HeaderCell>ETH</Table.HeaderCell>
-                          </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                          {winners}
-                        </Table.Body>
-                      </Table>
-                    </Container>
-                  </Grid.Row>
-                <Grid.Row >
-                  <Image centered height="250" width="300" src="http://digitalizedwarfare.com/wp-content/uploads/2017/01/poloniex-trollbox.png" />
-                </Grid.Row>
-                <Grid.Row >
-                  <Image centered height="250" width="300" src="http://www.betterfinanceguru.com/wp-content/uploads/2017/05/Ethereum-Post-Image-featured.png" />
-                </Grid.Row>
-
-              </Grid>
             </Grid.Column>
         </Grid>
 

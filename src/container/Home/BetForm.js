@@ -13,7 +13,7 @@ export class BetForm extends Component {
   render() {
     const { handleSubmit, submitting } = this.props;
     const semanticFormField = (
-      { input, type, label, placeholder,
+      { input, type, label, placeholder, style ,
         meta: { touched, error, warning },
         as: As = Input, ...props }) => {
       function handleChange (e, { value }) {
@@ -28,7 +28,8 @@ export class BetForm extends Component {
     };
     return (
       <Form name="product" onSubmit={handleSubmit}>
-
+        <table>
+        <tr><td height={100}>
         <Field name="expected_value"
             label="MY BID"
             labelPosition="left"
@@ -36,8 +37,13 @@ export class BetForm extends Component {
             as={Form.Input}
             placeholder="Expected value of eth"
             validate={[required,number]}
+            style={{float:'left', width:200}}
          />
-        <Button primary loading={submitting} disabled={submitting}>BET</Button>
+        </td>
+            <td height={100}>
+        <Button style={{valign: 'top'}} primary loading={submitting} disabled={submitting}>BET</Button>
+            </td>
+        </tr></table>
       </Form>
 
 
