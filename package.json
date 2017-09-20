@@ -1,7 +1,7 @@
 {
   "name": "bettingon_dapp",
   "version": "0.0.1",
-  "description": "B",
+  "description": "Bettingon contracts dapp in react/redux",
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server --port 9090 --debug --hot --open --content-base build",
@@ -9,7 +9,10 @@
     "serve": "npm run build && http-server-spa build",
     "testrpc": "testrpc -d -u 0 -u 1 -u 9 -l 4700000000000 ",
     "contract-update": "truffle migrate --reset",
-    "dev-dapp-rpc": "npm-run-all --parallel dev contract-update testrpc",
+    "dapprpc": "run-p testrpc eth-bridge",
+    "devnode-up": "run-p dapprpc dapp-dev",
+    "delay": "sleep 50s",
+    "dapp-dev": "run-s delay contract-update",
     "eth-bridge": "cd node_modules/ethereum-bridge && node bridge.js -a 9 -H localhost:8545 --gas 4700000 --dev ",
     "eslint": "eslint -c dapp/.eslintrc.json dapp"
   },
@@ -17,7 +20,9 @@
   "license": "GPL-3.0",
   "dependencies": {
     "bettingon": "git+ssh://git@github.com/blocktisans/bettingon.git",
+    "bip39": "^2.4.0",
     "enzyme": "^2.9.1",
+    "ethereumjs-wallet": "^0.6.0",
     "ethpm": "0.0.14",
     "html-webpack-harddisk-plugin": "^0.1.0",
     "lodash": "^4.17.4",
@@ -42,7 +47,8 @@
     "redux-thunk": "^2.2.0",
     "semantic-ui-react": "^0.71.3",
     "truffle-contract": "^1.1.11",
-    "web3": "^0.18.4"
+    "web3": "^0.18.4",
+    "web3-provider-engine": "^13.2.9"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
